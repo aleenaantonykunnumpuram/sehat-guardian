@@ -1,224 +1,356 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sehat Guardian - Smart Elderly Health Management</title>
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<script>tailwind.config={theme:{extend:{colors:{primary:'#4f46e5',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-<style>
-:where([class^="ri-"])::before { content: "\f3c2"; }
-body {
-font-family: 'Inter', sans-serif;
-background-color: #ffffff;
-}
-</style>
-<style>
-:where([class^="ri-"])::before { content: "\f3c2"; }
-body {
-font-family: 'Inter', sans-serif;
-background-color: #f9fafb;
-}
-.sidebar-link.active {
-background-color: rgba(79, 70, 229, 0.1);
-color: #4f46e5;
-border-left: 3px solid #4f46e5;
-}
-input[type="range"]::-webkit-slider-thumb {
--webkit-appearance: none;
-appearance: none;
-width: 24px;
-height: 24px;
-background: #4f46e5;
-border-radius: 50%;
-cursor: pointer;
-}
-.custom-checkbox {
-position: relative;
-display: inline-block;
-width: 24px;
-height: 24px;
-border: 2px solid #d1d5db;
-border-radius: 4px;
-transition: all 0.2s;
-}
-.custom-checkbox.checked {
-background-color: #4f46e5;
-border-color: #4f46e5;
-}
-.custom-checkbox.checked::after {
-content: "";
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-width: 12px;
-height: 12px;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7' /%3E%3C/svg%3E");
-background-size: contain;
-background-repeat: no-repeat;
-}
-.toggle-switch {
-position: relative;
-display: inline-block;
-width: 52px;
-height: 28px;
-}
-.toggle-switch input {
-opacity: 0;
-width: 0;
-height: 0;
-}
-.toggle-slider {
-position: absolute;
-cursor: pointer;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background-color: #e5e7eb;
-transition: .4s;
-border-radius: 34px;
-}
-.toggle-slider:before {
-position: absolute;
-content: "";
-height: 20px;
-width: 20px;
-left: 4px;
-bottom: 4px;
-background-color: white;
-transition: .4s;
-border-radius: 50%;
-}
-input:checked + .toggle-slider {
-background-color: #4f46e5;
-}
-input:checked + .toggle-slider:before {
-transform: translateX(24px);
-}
-.mood-selector input[type="radio"] {
-display: none;
-}
-.mood-selector label {
-cursor: pointer;
-transition: transform 0.2s;
-}
-.mood-selector input[type="radio"]:checked + label {
-transform: scale(1.2);
-color: #4f46e5;
-}
-.pill-reminder {
-transition: all 0.3s;
-}
-.pill-reminder:hover {
-transform: translateY(-2px);
-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-.water-progress {
-height: 20px;
-border-radius: 10px;
-background-color: #e5e7eb;
-overflow: hidden;
-}
-.water-progress-bar {
-height: 100%;
-background-color: #4f46e5;
-border-radius: 10px;
-transition: width 0.5s;
-}
-.custom-tab {
-transition: all 0.3s;
-}
-.custom-tab.active {
-background-color: #4f46e5;
-color: white;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sehat Guardian</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slideshow-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 96, 100, 0.8), rgba(0, 131, 143, 0.8));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Portal Section */
+        .portal-section {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #f8fdfd, #e0f2f1);
+            text-align: center;
+        }
+
+        .portal-section h2 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #006064;
+        }
+
+        .portal-section p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .portal-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 0 20px;
+        }
+
+        .portal-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0, 96, 100, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #006064, #00838f);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 96, 100, 0.2);
+        }
+
+        .portal-card i {
+            font-size: 4rem;
+            color: #006064;
+            margin-bottom: 20px;
+        }
+
+        .portal-card h3 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #006064;
+        }
+
+        .portal-card p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .portal-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #006064, #00838f);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 96, 100, 0.3);
+        }
+
+        .portal-btn:hover {
+            background: linear-gradient(135deg, #00838f, #006064);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 96, 100, 0.4);
+        }
+
+        /* Navigation dots for slideshow */
+        .slide-nav {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .slide-nav button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-nav button.active {
+            background: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .portal-section h2 {
+                font-size: 2.5rem;
+            }
+            
+            .portal-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .portal-section h2 {
+                font-size: 2rem;
+            }
+            
+            .portal-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-white">
-<nav class="w-full bg-transparent absolute top-0 left-0 z-10 py-6">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex justify-between items-center">
-<div class="flex items-center">
-<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-<span class="text-white font-['Pacifico'] text-2xl">SG</span>
-</div>
-<h1 class="ml-3 text-2xl font-['Pacifico'] text-white">Sehat Guardian</h1>
-</div>
-<div class="flex items-center space-x-8">
-<a href="#" class="text-white hover:text-white/80 font-medium">About</a>
-<a href="#" class="text-white hover:text-white/80 font-medium">Contact</a>
-<a href="#" class="text-white hover:text-white/80 font-medium">Support</a>
-</div>
-</div>
-</div>
-</nav>
-<main class="relative min-h-screen">
-<!-- Replace this block inside your homepage.html -->
-<div class="absolute inset-0 z-0">
-  <img src="https://readdy.ai/api/search-image?query=a%20serene%20and%20heartwarming%20scene%20of%20a%20guardian%20angel%20figure%20gently%20helping%20and%20supporting%20an%20elderly%20person%2C%20soft%20ethereal%20lighting%2C%20warm%20and%20comforting%20atmosphere%2C%20modern%20medical%20environment%2C%20high%20end%203d%20rendering%2C%20professional%20lighting%2C%20cinematic%20composition&width=1920&height=1080&seq=hero1&orientation=landscape" alt="Hero Background" class="w-full h-full object-cover">
-  <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
-</div>
+<body>
+    <!-- Hero Slideshow Section -->
+    <section class="hero">
+        <div class="slideshow-container">
+            <div class="slide active">
+                <img src="angel.jpg" alt="Healthcare Angel">
+            </div>
+            <div class="slide">
+                <img src="old people.jpg" alt="Elder Care">
+            </div>
+            <div class="slide">
+                <img src="hands.jpg" alt="Caring Hands">
+            </div>
+        </div>
+        
+        <div class="hero-overlay">
+            <h1>Stay Connected</h1>
+            <p>Bringing smiles and joy to our elders through care and connection.</p>
+        </div>
+        
+        <div class="slide-nav">
+            <button class="active" onclick="currentSlide(1)"></button>
+            <button onclick="currentSlide(2)"></button>
+            <button onclick="currentSlide(3)"></button>
+        </div>
+    </section>
 
-<div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
-<div class="max-w-3xl mx-auto text-center text-white mb-20">
-<h1 class="text-6xl font-bold mb-8">Welcome to Sehat Guardian</h1>
-<p class="text-xl leading-relaxed">Your trusted companion in elderly healthcare management. We combine advanced technology with compassionate care to ensure the well-being of your loved ones. Experience personalized care that makes a difference.</p>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-<div class="group bg-white/90 backdrop-blur-sm rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 text-center cursor-pointer hover:scale-105 transform">
-<div class="w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary/20 transition-colors duration-300">
-<i class="ri-user-heart-line text-7xl text-primary"></i>
-</div>
-<h2 class="text-3xl font-bold text-gray-800 mb-6">Patient</h2>
-<a href="users/login_patient.php" class="w-full inline-block text-center bg-primary text-white py-4 px-6 rounded-button text-lg font-medium hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl">
-  Login as Patient
-</a>
+    <!-- Portal Selection Section -->
+    <section class="portal-section">
+        <h2>Choose Your Portal</h2>
+        <p>Select your role to access your personalized dashboard and start your healthcare journey with us.</p>
+        
+        <div class="portal-grid">
+            <!-- Patient Portal Card -->
+            <div class="portal-card">
+                <i class="ri-user-heart-line"></i>
+                <h3>Patient</h3>
+                <p>Access your medical records, book appointments, and manage your health information securely.</p>
+                <a href="users/patient_portal.php" class="portal-btn">Patient Login / Register</a>
+            </div>
+            
+            <!-- Doctor Portal Card -->
+            <div class="portal-card">
+                <i class="ri-stethoscope-line"></i>
+                <h3>Doctor</h3>
+                <p>Manage patient appointments, access medical records, and provide quality healthcare services.</p>
+                <a href="doctor/doctor_login.php" class="portal-btn">Login as Doctor</a>
+            </div>
+            
+            <!-- Admin Portal Card -->
+            <div class="portal-card">
+                <i class="ri-admin-line"></i>
+                <h3>Admin</h3>
+                <p>Oversee system operations, manage users, and maintain the healthcare management platform.</p>
+                <a href="admin/login.php" class="portal-btn">Login as Admin</a>
+            </div>
+        </div>
+    </section>
 
-</div>
-<div class="group bg-white/90 backdrop-blur-sm rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 text-center cursor-pointer hover:scale-105 transform">
-<div class="w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary/20 transition-colors duration-300">
-<i class="ri-stethoscope-line text-7xl text-primary"></i>
-</div>
-<h2 class="text-3xl font-bold text-gray-800 mb-6">Doctor</h2>
-<a href="doctor/login.php" class="w-full inline-block text-center bg-primary text-white py-4 px-6 rounded-button text-lg font-medium hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl">
-  Login as Doctor
-</a>
+    <script>
+        // Slideshow functionality
+        let slideIndex = 1;
+        let slideInterval;
 
-</button>
-</div>
-<div class="group bg-white/90 backdrop-blur-sm rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 text-center cursor-pointer hover:scale-105 transform">
-<div class="w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary/20 transition-colors duration-300">
-<i class="ri-admin-line text-7xl text-primary"></i>
-</div>
-<h2 class="text-3xl font-bold text-gray-800 mb-6">Admin</h2>
-<a href="users/login.php" class="w-full inline-block text-center bg-primary text-white py-4 px-6 rounded-button text-lg font-medium hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl">
-  Login as Admin
-</a>
+        function showSlides(n) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.slide-nav button');
+            
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[slideIndex - 1].classList.add('active');
+            dots[slideIndex - 1].classList.add('active');
+        }
 
-</div>
-</div>
-</div>
-</main>
-<footer class="bg-gray-50 py-12">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="text-center">
-<div class="flex items-center justify-center mb-4">
-<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-<span class="text-white font-['Pacifico'] text-xl">SG</span>
-</div>
-<h3 class="ml-3 text-xl font-['Pacifico'] text-gray-800">Sehat Guardian</h3>
-</div>
-<p class="text-gray-600">&copy; 2025 Sehat Guardian. All rights reserved.</p>
-</div>
-</div>
-</footer>
+        function currentSlide(n) {
+            clearInterval(slideInterval);
+            slideIndex = n;
+            showSlides(slideIndex);
+            startSlideshow();
+        }
+
+        function nextSlide() {
+            slideIndex++;
+            showSlides(slideIndex);
+        }
+
+        function startSlideshow() {
+            slideInterval = setInterval(nextSlide, 4000); // Change slide every 4 seconds
+        }
+
+        // Initialize slideshow
+        document.addEventListener('DOMContentLoaded', function() {
+            showSlides(slideIndex);
+            startSlideshow();
+        });
+
+        // Add smooth scrolling for any anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
