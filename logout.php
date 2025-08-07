@@ -1,77 +1,25 @@
 <?php
 session_start();
 
-// ✅ Clear all session data
-session_unset();
+// Destroy session
+$_SESSION = [];
 session_destroy();
 
-// ✅ Prevent cache so back button can’t reopen secure pages
-header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
+// Clear session cookie
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+// Prevent caching
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
-header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Expires: 0");
 
-// ✅ Redirect to home page immediately
-header("Location: /sehat-guardian/home.php");
-exit();
+// ✅ Redirect to home or login
+header("Location: home.php"); // or login.php
+exit;
 ?>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Logging Out...</title>
-  <meta http-equiv="refresh" content="2;url=home.php">
-  
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f8ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .message-box {
-      background-color: #fff;
-      padding: 40px 50px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      text-align: center;
-    }
-    .message-box h2 {
-      color: #28a745;
-      margin-bottom: 10px;
-    }
-    .message-box p {
-      color: #555;
-      font-size: 16px;
-    }
-  </style>
-  
-  <script>
-    // Prevent back button access after logout
-    window.history.pushState(null, null, window.location.href);
-    window.onpopstate = function() {
-      window.history.pushState(null, null, window.location.href);
-    };
-    
-    // Clear browser cache
-    if (window.history && window.history.pushState) {
-      window.history.replaceState(null, null, window.location.href);
-    }
-    
-    setTimeout(() => {
-      window.location.href = "home.php";
-    }, 2000);
-  </script>
-</head>
-<body>
-  <div class="message-box">
-    <h2>✅ Logout Successful</h2>
-    <p>Redirecting you to the home page...</p>
-  </div>
-</body>
-</html>

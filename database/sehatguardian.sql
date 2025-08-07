@@ -63,10 +63,11 @@ CREATE TABLE IF NOT EXISTS appointments (
   doctor_id INT NOT NULL,
   appointment_date DATE NOT NULL,
   appointment_time TIME NOT NULL,
-  status ENUM('Pending','Approved','Rejected') DEFAULT 'Pending',
+  status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
   notes TEXT DEFAULT NULL,
-  payment_status ENUM('Paid','Pending') DEFAULT 'Pending',
-  payment_method ENUM('Cash','UPI','Cheque') DEFAULT NULL,
+  payment_status ENUM('Paid', 'Pending') DEFAULT 'Pending',
+  payment_method ENUM('Cash', 'UPI', 'Cheque', 'Card') DEFAULT NULL,
+  card_last4 VARCHAR(4) DEFAULT NULL,
   receipt_url VARCHAR(255) DEFAULT NULL,
   FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (doctor_id) REFERENCES users(id) ON DELETE CASCADE
@@ -76,10 +77,12 @@ CREATE TABLE IF NOT EXISTS appointments (
 CREATE TABLE IF NOT EXISTS alerts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   patient_id INT NOT NULL,
-  alert_type ENUM('Emergency','Missed Dose') NOT NULL,
+  alert_type ENUM('Emergency', 'Missed Dose') NOT NULL,
   message TEXT DEFAULT NULL,
-  status ENUM('Unread','Read') DEFAULT 'Unread',
+  status ENUM('Unread', 'Read') DEFAULT 'Unread',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  seen_by_doctor BOOLEAN DEFAULT 0,
+  seen_by_admin BOOLEAN DEFAULT 0,
   FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

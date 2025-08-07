@@ -21,6 +21,23 @@ $stmt->execute();
 $stmt->bind_result($doctor_name);
 $stmt->fetch();
 $stmt->close();
+
+// ✅ Fetch unseen alerts for doctor
+$unseen_alerts = [];
+
+$sql = "SELECT a.*, u.name AS patient_name
+        FROM alerts a
+        JOIN users u ON a.patient_id = u.id
+        WHERE a.seen_by_doctor = 0
+        ORDER BY a.created_at DESC";
+
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $unseen_alerts[] = $row;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -332,6 +349,24 @@ $stmt->close();
             justify-content: center;
             font-weight: bold;
         }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
     
     <script>
@@ -461,6 +496,10 @@ $stmt->close();
                 <span class="btn-icon">📊</span>
                 View Reports
             </a>
+            <a href="view_alerts.php" class="dashboard-button">
+  🚨 View Alerts
+</a>
+
         </div>
 
         <div class="logout-section">
@@ -469,6 +508,42 @@ $stmt->close();
                 Logout
             </a>
         </div>
+
+        <!-- Unseen Alerts Section -->
+        <?php if (!empty($unseen_alerts)): ?>
+            <div class="alert alert-warning" style="margin: 20px 0;">
+                <strong>Unseen Emergency Alerts:</strong>
+                <ul>
+                    <?php foreach ($unseen_alerts as $alert): ?>
+                        <li>
+                            <span style="color: #d32f2f;">🚨</span>
+                            <?= htmlspecialchars($alert['alert_type']) ?> from <?= htmlspecialchars($alert['patient_name']) ?> 
+                            at <?= htmlspecialchars($alert['created_at']) ?>: 
+                            <?= htmlspecialchars($alert['message']) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
     </div>
+    <div id="alertBox"></div>
+
+<script>
+setInterval(() => {
+    fetch('../includes/check_alerts.php') // adjust path if needed
+        .then(response => response.json())
+        .then(data => {
+            if (data.new_alerts) {
+                alert("🚨 New " + data.alert_type + " Alert from Patient ID: " + data.patient_id);
+                document.getElementById('alertBox').innerHTML =
+                    `<div class="alert alert-danger" style="margin: 10px; padding: 10px;">
+                        <strong>${data.alert_type} Alert:</strong> ${data.message}
+                     </div>`;
+                fetch('../includes/mark_alert_read.php?id=' + data.alert_id);
+            }
+        });
+}, 5000);
+</script>
+
 </body>
 </html>
